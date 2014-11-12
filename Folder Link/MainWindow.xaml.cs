@@ -31,24 +31,24 @@ namespace Folder_Link
 
             this.DataContext = new ViewModel.MainWindowViewModel();
 
-            Console.WriteLine(EditDistance.Compare("sitting", "kitten"));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string result = string.Empty;
-            
+            List<string> result=null;
+
             var ofd = new CommonOpenFileDialog();
             ofd.EnsureFileExists = true;
             ofd.EnsurePathExists = true;
             ofd.EnsureReadOnly = false;
             ofd.IsFolderPicker = true;
+            ofd.Multiselect = true;
             if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                result = ofd.FileName;
+                result = ofd.FileNames.ToList();
             }
-            
-            ((ViewModel.MainWindowViewModel)this.DataContext).AddSource.Execute(result);
+            if (result != null)
+                ((ViewModel.MainWindowViewModel)this.DataContext).AddSource.Execute(result);
         }
 
         private void SortContentButton_Click(object sender, RoutedEventArgs e)

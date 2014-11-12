@@ -12,7 +12,7 @@ namespace Folder_Link.ViewModel
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        public ICommand AddSource { get { return new RelayCommand<string>(AddDirectory, CanAddDirectory); } }
+        public ICommand AddSource { get { return new RelayCommand<List<String>>(AddDirectory, CanAddDirectory); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -32,22 +32,25 @@ namespace Folder_Link.ViewModel
 
         }
 
-        private void AddDirectory(string directoryPath)
+        private void AddDirectory(List<String> directoriesPath)
         {
-            
+            foreach (var directoryPath in directoriesPath)
             {
-                DirectoryInfo di = new DirectoryInfo(directoryPath);
-                _sourcesList.Add(di);
-                foreach (var file in di.GetFiles())
-                    _contentList.Add(file);
+                if(Directory.Exists(directoryPath))
+                {
+                    DirectoryInfo di = new DirectoryInfo(directoryPath);
+                    _sourcesList.Add(di);
+                    foreach (var file in di.GetFiles())
+                        _contentList.Add(file);
+                }
             }
         }
 
-        private bool CanAddDirectory(string directoryPath)
+        private bool CanAddDirectory(List<String> directoriesPath)
         {
-            return Directory.Exists(directoryPath);
+            return directoriesPath.Any(x => Directory.Exists(x));
         }
 
-        
+
     }
 }
