@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Win32;
 using System.ComponentModel;
+using System.IO;
 
 namespace Folder_Link
 {
@@ -55,5 +56,26 @@ namespace Folder_Link
         {
             contentListView.Items.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
+
+        private void OpenMI_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = (sender as MenuItem).DataContext as FileInfo;
+            InputOutputOperations.OpenFile(selected.FullName);
+        }
+
+        private void OpenDirectoryMI_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = (sender as MenuItem).DataContext as FileInfo;
+            InputOutputOperations.OpenLocation(selected.FullName);
+        }
+
+  
+        private void CopyMI_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = (sender as MenuItem).DataContext as FileInfo;
+            InputOutputOperations.Copy(selected.FullName);
+        }
+
+        
     }
 }

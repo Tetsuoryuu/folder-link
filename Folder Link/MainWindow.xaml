@@ -12,7 +12,6 @@
         <Button DockPanel.Dock="Top" Click="Button_Click">Add new source</Button>
         <UniformGrid DockPanel.Dock="Top">
             <Button x:Name="SortContentButton" Click="SortContentButton_Click">Sort</Button>
-            <Button>Shuffle</Button>
         </UniformGrid>
         <ListView x:Name="sourcesListView" DockPanel.Dock="Left" ItemsSource="{Binding SourcesList}">
             <ListView.ItemTemplate>
@@ -28,18 +27,20 @@
                 <DataTemplate>
                     <Grid Background="{Binding Directory,Converter={StaticResource dtcc}}">
                         <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="OpenMI" Click="OpenMI_Click" Header="Open"/>
+                                <MenuItem x:Name="OpenDirectoryMI" Click="OpenDirectoryMI_Click" Header="Open Directory"/>
+                                <MenuItem x:Name="CopyMI" Click="CopyMI_Click" Header="Copy"/>
+                                <MenuItem Header="Rename" Foreground="Red"/>
+                                <MenuItem Header="Delete" Foreground="Red"/>
+                                <MenuItem Header="Cut" Foreground="Red"/>
+                                
+                            </ContextMenu>
+                        </Grid.ContextMenu>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem>Open</MenuItem>
-                    <MenuItem>Rename</MenuItem>
-                    <MenuItem>Delete</MenuItem>
-                    <MenuItem>Cut</MenuItem>
-                    <MenuItem>Copy</MenuItem>
-                </ContextMenu>
-            </ListView.ContextMenu>
         </ListView>
     </DockPanel>
 </Window>
