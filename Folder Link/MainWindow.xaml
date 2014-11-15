@@ -31,6 +31,15 @@
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem>Open</MenuItem>
+                    <MenuItem>Rename</MenuItem>
+                    <MenuItem>Delete</MenuItem>
+                    <MenuItem>Cut</MenuItem>
+                    <MenuItem>Copy</MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
     </DockPanel>
 </Window>
