@@ -45,7 +45,7 @@
                                     <MenuItem x:Name="OpenDirectoryMI" Click="OpenDirectoryMI_Click" Header="Open Directory"/>
                                     <MenuItem x:Name="CopyMI" Click="CopyMI_Click" Header="Copy"/>
                                     <MenuItem x:Name="RenameMI" Click="RenameMI_Click" Header="Rename"/>
-                                    <MenuItem Header="Delete" Foreground="Red"/>
+                                    <MenuItem x:Name="DeleteMI" Click="DeleteMI_Click" Header="Delete"/>
                                     <MenuItem Header="Cut" Foreground="Red"/>
                                 </ContextMenu>
                             </TextBox.ContextMenu>

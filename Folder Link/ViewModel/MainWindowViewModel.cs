@@ -16,6 +16,8 @@ namespace Folder_Link.ViewModel
         public ICommand AddSource { get { return new RelayCommand<List<String>>(AddDirectory, CanAddDirectory); } }
         public ICommand Rename { get { return new RelayCommand<Tuple<string,string>>(RenameFile, CanRenameFile); } }
 
+        public ICommand Delete { get { return new RelayCommand<string>(DeleteFile, CanDeleteFile); } }
+
         #endregion
 
 
@@ -69,15 +71,17 @@ namespace Folder_Link.ViewModel
             
             
             bool success = InputOutputOperations.Rename(originalFileName, newFileName);
-            //if (!success)
-              //  throw new Exception("Impossible to Rename the File");
-            //file.Name = newFileName;
+
+
             if (success)
             {
+                //Update the current state of the FileInfo associated to the renamed file
                 FileInfo file = _contentList.Single(x => x.FullName == originalFileName);
                 int ind = _contentList.IndexOf(file);
                 _contentList[ind] = new FileInfo(newFileName);
             }
+            else
+                throw new Exception("Impossible to Rename the File"); //TODO: Improve Exception handling
 
         }
 
@@ -88,6 +92,21 @@ namespace Folder_Link.ViewModel
             return _contentList.Any(x => x.Name == originalFileName) && string.IsNullOrEmpty(newFileName);
         }
 
+        private void DeleteFile(string fileName)
+        {
+            bool success = InputOutputOperations.Delete(fileName);
+            if (success)
+            {
+                FileInfo file = _contentList.Single(x => x.FullName == fileName);
+                _contentList.Remove(file);
+            }
+            else
+                throw new Exception("Impossible to Delete the File"); //TODO: Improve Exception handling
+        }
 
+        private bool CanDeleteFile(string fileName)
+        {
+            return File.Exists(fileName);
+        }
     }
 }

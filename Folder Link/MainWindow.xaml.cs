@@ -158,6 +158,12 @@ namespace Folder_Link
         }
 
         #endregion
+
+        private void DeleteMI_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = (sender as MenuItem).DataContext as FileInfo;
+            ((ViewModel.MainWindowViewModel)this.DataContext).Delete.Execute(selected.FullName);
+        }
     }
 
 
