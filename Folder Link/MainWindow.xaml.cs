@@ -24,7 +24,7 @@ namespace Folder_Link
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private CollectionView contentCV;
 
         public MainWindow()
         {
@@ -32,11 +32,12 @@ namespace Folder_Link
 
             this.DataContext = new ViewModel.MainWindowViewModel();
 
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            List<string> result=null;
+            List<string> result = null;
 
             var ofd = new CommonOpenFileDialog();
             ofd.EnsureFileExists = true;
@@ -69,13 +70,95 @@ namespace Folder_Link
             InputOutputOperations.OpenLocation(selected.FullName);
         }
 
-  
+
         private void CopyMI_Click(object sender, RoutedEventArgs e)
         {
             var selected = (sender as MenuItem).DataContext as FileInfo;
             InputOutputOperations.Copy(selected.FullName);
         }
 
-        
+        #region Content Filtering Logic
+        private bool FilterContentView(object item)
+        {
+            string currentFilter = FilterTB.Text;
+            if (string.IsNullOrEmpty(currentFilter))
+                return true;
+            else
+                return (item as FileInfo).Name.Contains(currentFilter);
+        }
+
+        private void FilterTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (contentCV == null)
+            {
+                contentCV = (CollectionView)CollectionViewSource.GetDefaultView(contentListView.ItemsSource);
+                contentCV.Filter = FilterContentView;
+            }
+            contentCV.Refresh();
+        }
+
+        #endregion
+
+        #region Content Renaming Logic
+
+        private bool EditMode = false;
+        private FileInfo currentEditingItem;
+        private TextBox currentTextBox;
+        private Brush currentTextBoxOriginaBrush;
+        private string currentTextBoxOriginalContent;
+
+        private void RenameMI_Click(object sender, RoutedEventArgs e)
+        {
+            EditMode = true;
+            currentTextBox.IsReadOnly = false;
+            currentTextBoxOriginaBrush=currentTextBox.Background;
+            currentTextBox.Background = new SolidColorBrush(Colors.Yellow);
+            currentTextBox.Focus();
+        }
+
+
+
+        private void TextBox_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!EditMode)
+            {
+                currentTextBox = (sender as TextBox);
+                currentTextBoxOriginalContent = currentTextBox.Text;
+            }
+            else
+            {
+                StopEditing();
+            }
+        }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Rename();
+            else if (e.Key == Key.Escape)
+                StopEditing();
+        }
+
+        private void Rename()
+        {
+            string directory=(currentTextBox.DataContext as FileInfo).DirectoryName;
+            string oldFileName = System.IO.Path.Combine(directory, currentTextBoxOriginalContent);
+            string newFileName=System.IO.Path.Combine(directory,currentTextBox.Text);
+            
+            ((ViewModel.MainWindowViewModel)this.DataContext).Rename.Execute(Tuple.Create(oldFileName,newFileName));
+            StopEditing();
+        }
+
+        private void StopEditing()
+        {
+            EditMode = false;
+            currentTextBox.Background = currentTextBoxOriginaBrush;
+            currentTextBox.Text = currentTextBoxOriginalContent;
+            currentTextBox.IsReadOnly = true;
+        }
+
+        #endregion
     }
+
+
 }

@@ -3,16 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:Folder_Link"
         Title="MainWindow" Height="553" Width="1164">
-    
+
     <Window.Resources>
         <l:DirectoryToColorConverter x:Key="dtcc"/>
     </Window.Resources>
-    
+
     <DockPanel>
         <Button DockPanel.Dock="Top" Click="Button_Click">Add new source</Button>
         <UniformGrid DockPanel.Dock="Top">
             <Button x:Name="SortContentButton" Click="SortContentButton_Click">Sort</Button>
         </UniformGrid>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Padding="10,0,10,0" FontWeight="Bold">Filter:</Label>
+            <TextBox Grid.Column="1" x:Name="FilterTB" TextChanged="FilterTB_TextChanged"/>
+            <Button Grid.Column="2" x:Name="CancelFilterSelectionButton" FontWeight="Bold" Content="X">
+
+            </Button>
+        </Grid>
         <ListView x:Name="sourcesListView" DockPanel.Dock="Left" ItemsSource="{Binding SourcesList}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -22,22 +34,22 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ListView x:Name="contentListView" DockPanel.Dock="Right" ItemsSource="{Binding ContentList}">
+        <ListView x:Name="contentListView" DockPanel.Dock="Right" ItemsSource="{Binding ContentList}" HorizontalContentAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="{Binding Directory,Converter={StaticResource dtcc}}">
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                        <Grid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="OpenMI" Click="OpenMI_Click" Header="Open"/>
-                                <MenuItem x:Name="OpenDirectoryMI" Click="OpenDirectoryMI_Click" Header="Open Directory"/>
-                                <MenuItem x:Name="CopyMI" Click="CopyMI_Click" Header="Copy"/>
-                                <MenuItem Header="Rename" Foreground="Red"/>
-                                <MenuItem Header="Delete" Foreground="Red"/>
-                                <MenuItem Header="Cut" Foreground="Red"/>
-                                
-                            </ContextMenu>
-                        </Grid.ContextMenu>
+                        <TextBox Text="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" IsReadOnly="True" Background="{Binding Directory,Converter={StaticResource dtcc}}" MouseRightButtonUp="TextBox_MouseRightButtonUp" KeyUp="TextBox_KeyUp">
+                            <TextBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="OpenMI" Click="OpenMI_Click" Header="Open"/>
+                                    <MenuItem x:Name="OpenDirectoryMI" Click="OpenDirectoryMI_Click" Header="Open Directory"/>
+                                    <MenuItem x:Name="CopyMI" Click="CopyMI_Click" Header="Copy"/>
+                                    <MenuItem x:Name="RenameMI" Click="RenameMI_Click" Header="Rename"/>
+                                    <MenuItem Header="Delete" Foreground="Red"/>
+                                    <MenuItem Header="Cut" Foreground="Red"/>
+                                </ContextMenu>
+                            </TextBox.ContextMenu>
+                        </TextBox>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
